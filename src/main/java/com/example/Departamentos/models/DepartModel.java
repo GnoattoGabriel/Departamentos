@@ -11,7 +11,10 @@ public class DepartModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "nome_departamento")
     private String nome;
+
     private String localizacao;
 
     public DepartModel(){}
