@@ -4,6 +4,7 @@ package com.example.Departamentos.controllers;
 import com.example.Departamentos.models.DepartModel;
 import com.example.Departamentos.services.DepartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +18,33 @@ public class DepartController {
     private DepartService departService;
 
     @PostMapping
-    public DepartModel criarDepart(@RequestBody DepartModel novoDepart){
-        return departService.criarDepart(novoDepart);
+    public ResponseEntity<DepartModel> criarDepart(@RequestBody DepartModel novoDepart){
+        DepartModel departamento = departService.criarDepart(novoDepart);
+        return ResponseEntity.status(201).body(departamento);
     }
 
     @GetMapping
-    public List<DepartModel> buscarTodos(){
-        return departService.listarTodos();
+    public ResponseEntity<List<DepartModel>> buscarTodos(){
+        return ResponseEntity.ok(departService.listarTodos());
     }
 
     @DeleteMapping("/{id}")
-    public void deletarDepart(@PathVariable Long id){
+    public ResponseEntity<?> deletarDepart(@PathVariable Long id){
         departService.deletarDepart(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public Optional<DepartModel> buscarPorId(@PathVariable Long id){
-        return departService.buscarPorId(id);
+    public ResponseEntity<DepartModel> buscarPorId(@PathVariable Long id){
+        return departService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public DepartModel atualizarDepart(@PathVariable Long id,@RequestBody DepartModel novoDepart){
-        return departService.atualizarDepart(id, novoDepart);
+    public ResponseEntity<DepartModel> atualizarDepart(@PathVariable Long id,@RequestBody DepartModel novoDepart){
+        DepartModel departAtt = departService.atualizarDepart(id, novoDepart);
+        return ResponseEntity.ok(departAtt);
     }
 
 }
